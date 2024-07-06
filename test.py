@@ -24,6 +24,25 @@ for i in range(NO_OF_SENSORS):
 for i in range(NO_OF_SENSORS):
     progress_bars.append(tqdm(total=100, desc=f'PZ {i+1}', ncols=100, bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'))
 
+success = False
+while i in range(10):
+    line = arduino.readline()
+    try:
+        line = line.decode('utf-8').strip()
+        tokens = line.split(',')
+        if len(tokens) != 3:
+            continue
+        
+        # initialised successfully
+        success = True
+        break
+    except:
+        continue
+
+if not success:
+    print(f"failed to initialise serial connection")
+    exit()
+
 while True:
     if arduino.in_waiting > 0:
         line = arduino.readline().decode('utf-8').strip()
