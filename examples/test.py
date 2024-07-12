@@ -1,5 +1,5 @@
+import asyncio
 from queue import Empty, Queue
-import signal
 import time
 
 from tqdm import tqdm
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     # initialise sensor
     q = Queue()
     sensor.register_listener(0, q)
-    thread = sensor.start()
+    thread = asyncio.run(sensor.start())
 
     # set up progress bars 
     progress_bars = []
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # do something
     while True:
         try:
-            msg = q.get_nowait()
+            msg = q.get()
 
             sensor_id = msg.sensor_id
             if msg.sensor_type is SensorType.PIEZO:

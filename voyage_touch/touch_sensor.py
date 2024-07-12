@@ -39,18 +39,7 @@ class TouchSensor:
     # TODO: methods for reading values.
 
     async def start(self) -> Thread:
-        sensor_thread = Thread(target=lambda: asyncio.run(self.run()))
-        
-        sensor_thread.start()
-        return sensor_thread
-    
-    def stop(self):
-        self.should_stop = True
-
-    async def run(self):
-        """
-        Starts the sensor reader in a separate thread. Blocks until the connection cuts off or the sensor is stopped.
-        """
+        # Initialse serial connection
         arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1) 
         print("initialising serial connection...")
         time.sleep(0.5)  # Wait for the serial connection to initialize
@@ -74,13 +63,30 @@ class TouchSensor:
             # TODO: better logging 
             print(f"failed to initialise serial connection")
             return
+
+        sensor_thread = Thread(target=lambda: asyncio.run(self.run(arduino)))
         
+        print("serial connection initialised!")
+
+        sensor_thread.start()
+        return sensor_thread
+    
+    def stop(self):
+        self.should_stop = True
+
+    async def run(self, arduino):
+        """
+        Starts the sensor reader in a separate thread. Blocks until the connection cuts off or the sensor is stopped.
+        """
         while True:
             if self.should_stop:
                 return
 
             if arduino.in_waiting > 0:
-                line = arduino.readline().decode('utf-8').strip()
+                try:
+                    line = arduino.readline().decode('utf-8').strip()
+                except UnicodeDecodeError:
+                    continue
                 tokens = line.split(',')
                 if len(tokens) != 3:
                     print(f"invalid format received via serial: {line}\n")
