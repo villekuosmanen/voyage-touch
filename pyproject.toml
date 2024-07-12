@@ -7,6 +7,10 @@ authors = [
 description = "Open-source low-cost robot touch sensor hardware and controls."
 readme = "README.md"
 requires-python = ">=3.8"
+dependencies = [
+  'pyserial > 3',
+]
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
