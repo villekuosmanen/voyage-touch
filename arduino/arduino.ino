@@ -18,8 +18,6 @@ void loop() {
     Serial.println(fsrValue);
   }
 
-  delay(10);
-
   // piezoelectric sensors
   for (int i = 0; i < 3; i++) {
     piezoValue = analogRead(piezoPins[i]);
@@ -29,5 +27,4 @@ void loop() {
     Serial.print(",");
     Serial.println(piezoValue);
   }
-  delay(10);
 }

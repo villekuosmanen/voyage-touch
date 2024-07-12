@@ -1,4 +1,4 @@
-import time 
+import time
 
 import serial 
 from tqdm import tqdm
