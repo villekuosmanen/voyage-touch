@@ -4,6 +4,8 @@
 
 Voyage Touch is a Python library for interacting with tactile sensors built using force sensitive resistors, or piezoelectronic sensors. It provides methods for reading raw sensor data, as well as an interface for an **artificial somatosensory cortex** - a model for predicting touch events from raw data.
 
+Voyage Touch is built and maintained by [Voyage Robotics](https://www.voyagerobotics.com/).
+
 ## ASSC model
 
 An ASSC is a foundation model for tactile sensing, converting raw sensor data into features such as touch contact (1 or 0), magnitude of force, or the direction of the force vector. A pre-trained ASSC is designed to be used as an input to other machine learning policies, allowing an easy integration of tactile sensing without the need to retrain the policy.
