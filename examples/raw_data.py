@@ -8,6 +8,8 @@ from voyage_touch.sensor import SensorType, TouchSensor, TouchSensorReader
 
 NO_OF_SENSORS = 3
 
+# Example for reading raw data from a queue using the TouchSensorReader class.
+
 if __name__ == '__main__':
     sensor = TouchSensor('/dev/ttyACM0')
     reader = TouchSensorReader(sensor)

@@ -1,10 +1,12 @@
 import asyncio
+from collections import deque
+import time
 from threading import Thread
 
 import numpy as np
 
-from voyage_touch.assc import ASSCModelConfig
-from voyage_touch.sensor import SensorReading, TouchSensor
+from voyage_touch.assc import ASSCModel
+from voyage_touch.sensor import SensorType, SensorReading, TouchSensor
 
 class ASSC:
     """
@@ -12,8 +14,10 @@ class ASSC:
 
     Predicts tactile events based on sensor data.
     """
-    def __init__(self, config: ASSCModelConfig, sensor: TouchSensor, sensor_reading_time_window=5000):
+    def __init__(self, model: ASSCModel, sensor: TouchSensor, sensor_reading_time_window=5000):
         self.sensor = sensor
+        self.model = model
+        config = model.get_config()
 
         assert sensor.num_fsrs == config.num_fsr_sensors
         assert sensor.num_pzs == config.num_piezo_sensors
@@ -22,8 +26,8 @@ class ASSC:
         self.num_fsr_sensors = config.num_fsr_sensors
         self.num_piezo_sensors = config.num_piezo_sensors
 
-        # maintain a time window of sensor readings
-        # TODO
+        # maintain a time window of sensor readings for each sensor
+        self.readings = [deque()]*(sensor.num_fsrs + sensor.num_pzs)
     
     async def start(self) -> Thread:
         success = self.sensor.connect(self.sensor_callback)
@@ -40,12 +44,21 @@ class ASSC:
         self.sensor.close()
 
     def sensor_callback(self, reading: SensorReading):
-        # TODO
-        pass
+        sensor_id = reading.sensor_id
+        if reading.sensor_type is SensorType.PIEZO:
+            sensor_id += self.sensor.num_fsrs
 
-    def predict() -> np.array:
+        current_time = time.time_ns()
+        self.readings[sensor_id].append((current_time, reading.value))
+        self._remove_old_readings(sensor_id, current_time)
+
+    def _remove_old_readings(self, sensor_id, current_time):
+        while self.readings[sensor_id] and (current_time - self.readings[sensor_id][0][0]) > self.time_window:
+            self.readings.popleft()
+
+
+    def predict(self) -> np.array:
         """
         For every point in the ASSC model, predict the current touch event state.
         """
-        # TODO
-        pass
+        return self.model.predict(self.readings)
