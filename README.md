@@ -28,6 +28,11 @@ Your touch sensor should now be ready to use with the Voyage Touch library!
 pip install voyage-touch
 ```
 
+To run the examples, also install the following:
+```
+pip install tqdm
+```
+
 The Voyage Touch API is still experimental and may change in the future.
 
 
