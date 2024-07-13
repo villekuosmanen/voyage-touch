@@ -18,7 +18,6 @@ if __name__ == '__main__':
     q = Queue()
     reader.register_listener(0, q)
     thread = asyncio.run(reader.start())
-
     time.sleep(1)
 
     # test reading a few values:

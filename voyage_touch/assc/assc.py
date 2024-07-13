@@ -15,6 +15,9 @@ class ASSC:
     Predicts tactile events based on sensor data.
     """
     def __init__(self, model: ASSCModel, sensor: TouchSensor, sensor_reading_time_window=5000):
+        """
+        sensor_reading_time_window: time window in milliseconds.
+        """
         self.sensor = sensor
         self.model = model
         config = model.get_config()
@@ -22,6 +25,7 @@ class ASSC:
         assert sensor.num_fsrs == config.num_fsr_sensors
         assert sensor.num_pzs == config.num_piezo_sensors
         
+        self.time_window = sensor_reading_time_window * 1_000_000   # convert to nanoseconds
         self.num_points = config.num_points
         self.num_fsr_sensors = config.num_fsr_sensors
         self.num_piezo_sensors = config.num_piezo_sensors
@@ -49,12 +53,12 @@ class ASSC:
             sensor_id += self.sensor.num_fsrs
 
         current_time = time.time_ns()
-        self.readings[sensor_id].append((current_time, reading.value))
+        self.readings[sensor_id].append((current_time, reading))
         self._remove_old_readings(sensor_id, current_time)
 
     def _remove_old_readings(self, sensor_id, current_time):
         while self.readings[sensor_id] and (current_time - self.readings[sensor_id][0][0]) > self.time_window:
-            self.readings.popleft()
+            self.readings[sensor_id].popleft()
 
 
     def predict(self) -> np.array:

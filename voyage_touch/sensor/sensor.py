@@ -75,6 +75,10 @@ class TouchSensor:
                 try:
                     if tokens[0] == "FSR":
                         sensor_id = int(tokens[1])
+                        if sensor_id >= self.num_fsrs:
+                            # more sensors in the hardware device than our software supports
+                            # therefore silently ignore them
+                            continue
 
                         # Convert FSR value to an integer
                         pz_value = int(tokens[2])
@@ -87,6 +91,10 @@ class TouchSensor:
 
                     elif tokens[0] == "PZ":
                         sensor_id = int(tokens[1])
+                        if sensor_id >= self.num_pzs:
+                            # more sensors in the hardware device than our software supports
+                            # therefore silently ignore them
+                            continue
 
                         # Convert FSR value to an integer
                         pz_value = int(tokens[2])
