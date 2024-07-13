@@ -1,21 +1,21 @@
 [project]
 name = "voyage-touch"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Ville Kuosmanen" },
 ]
 description = "Open-source low-cost robot touch sensor hardware and controls."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.6"
 dependencies = [
-  'numpy',
-  'pyserial', 
+  "numpy>=1.16",
+  "pyserial >= 3.0"
 ]
 
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: OS Independent"
 ]
 
 [project.urls]
