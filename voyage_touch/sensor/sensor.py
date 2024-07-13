@@ -4,7 +4,6 @@ import time
 import serial
 
 from voyage_touch.sensor import SensorType
-from voyage_touch.sensor import SensorReading
 
 FSR_MAX_READING = 1000
 PIEZO_MAX_READING = 160

@@ -63,7 +63,7 @@ class TouchSensorReader:
         Returns the current sensor reading for the current sensor ID.
         """
         if sensor_type is SensorType.PIEZO:
-            sensor_id += self.num_fsrs
+            sensor_id += self.sensor.num_fsrs
 
         if sensor_id >= len(self.sensor_readings) or sensor_id < 0:
             raise ValueError("sensor id outside expected range - no such sensor exists")
