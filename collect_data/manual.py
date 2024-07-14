@@ -14,17 +14,18 @@ NO_OF_PIEZOS = 3
 from voyage_touch.sensor import SensorType, TouchSensor, TouchSensorReader
 
 # Example for a manual data collection process.
+# This example is for Markovian predictions and does not use time series measurement data
 
 class EscapeException(Exception): pass
 
 def on_press(key):
     if key == keyboard.Key.esc:
         raise EscapeException(key)
-    if key.char is not None and key.char in '123456789':
+    if hasattr(key, 'char') and key.char in '123456789':
         print(f"Key {key.char} pressed")
 
 def on_release(key):
-    if key.char is not None and key.char in '123456789':
+    if hasattr(key, 'char') and key.char in '123456789':
         print(f"Key {key.char} released")
 
 def disable_echo():
@@ -49,13 +50,14 @@ def record_sensor_values(q: Queue):
             if msg.sensor_type is SensorType.PIEZO:
                 sensor_id += NO_OF_FSRS
 
-            value = msg.value
-            if msg.sensor_type is SensorType.PIEZO:
-                value *= 160
-            else:
-                value *= 1000
-
             # TODO: record reading
+
+            display_value = msg.value
+            if msg.sensor_type is SensorType.PIEZO:
+                display_value *= 160
+            else:
+                display_value *= 1000
+
 
         except Empty:
             pass
