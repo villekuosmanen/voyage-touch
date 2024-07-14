@@ -5,6 +5,8 @@ from typing import List
 
 import numpy as np
 
+from voyage_touch.sensor import SensorReading
+
 @dataclass
 class ASSCModelConfig:
     """
@@ -26,8 +28,14 @@ class ASSCModel(ABC):
         """
         pass
 
-    def predict(self, readings: List[deque]) -> np.array:
+    def predict_markovian(self, readings: List[SensorReading]) -> np.array:
         """
-        Predict touch events (1 or 0) for each point when given a time series of sensor readings for each sensor.
+        Predict touch events (1 or 0) for each point when given the most recent sensor readings.
+        """
+        pass
+
+    def predict_timeseries(self, readings: List[deque]) -> np.array:
+        """
+        Predict touch events (1 or 0) for each point when given a time series of sensor readings.
         """
         pass

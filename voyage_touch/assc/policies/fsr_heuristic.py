@@ -4,6 +4,7 @@ from typing import List
 
 import numpy as np
 
+from voyage_touch.sensor import SensorReading
 from voyage_touch.assc import ASSCModel, ASSCModelConfig
 
 class FSRHeuristicPolicy(ASSCModel):
@@ -23,11 +24,12 @@ class FSRHeuristicPolicy(ASSCModel):
     def get_config(self) -> ASSCModelConfig:
         return self.config
     
-    def predict(self, readings: List[deque]) -> np.array:
+    def predict_markovian(self, readings: List[SensorReading]) -> np.array:
         res = np.zeros(self.config.num_points)
-        for i, reading_queue in enumerate(readings):
-            if len(reading_queue) > 0:
-                latest = reading_queue.pop()
-                if latest[1].value > self.floor:
-                    res[i] = 1
+        for i, reading in enumerate(readings):
+            if reading is not None and reading.value > self.floor:
+                res[i] = 1
         return res
+    
+    def predict_timeseries(self, readings: List[deque]) -> np.array:
+        raise NotImplementedError("FSRHeuristicPolicy only supports Markovian ASSCs.")
