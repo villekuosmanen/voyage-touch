@@ -28,7 +28,7 @@ class ASSCModel(ABC):
         """
         pass
 
-    def predict_markovian(self, readings: List[SensorReading]) -> np.array:
+    def predict_markovian(self, readings: List[float]) -> np.array:
         """
         Predict touch events (1 or 0) for each point when given the most recent sensor readings.
         """

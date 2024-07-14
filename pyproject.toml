@@ -9,7 +9,8 @@ readme = "README.md"
 requires-python = ">=3.6"
 dependencies = [
   "numpy>=1.16",
-  "pyserial >= 3.0"
+  "pyserial >= 3.0",
+  "scikit-learn"
 ]
 
 classifiers = [

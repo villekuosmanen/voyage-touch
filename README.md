@@ -14,7 +14,7 @@ Currently, only a heuristic ASSC model that supports force-sensing resistors is 
 
 ### Data collection
 
-See [this README file](collect_data/README.md).
+See [this README file](experiments/README.md).
 
 ## Installation
 

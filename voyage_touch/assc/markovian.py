@@ -29,8 +29,8 @@ class MarkovianASSC(ASSC):
         self.num_fsr_sensors = config.num_fsr_sensors
         self.num_piezo_sensors = config.num_piezo_sensors
 
-        # maintain most recent readings for each sensor
-        self.readings = [None]*(sensor.num_fsrs + sensor.num_pzs)
+        # maintain most recent sensor_values for each sensor
+        self.sensor_values = [0]*(sensor.num_fsrs + sensor.num_pzs)
     
     async def start(self) -> Thread:
         success = self.sensor.connect(self.sensor_callback)
@@ -51,10 +51,10 @@ class MarkovianASSC(ASSC):
         if reading.sensor_type is SensorType.PIEZO:
             sensor_id += self.sensor.num_fsrs
             
-        self.readings[sensor_id] = reading
+        self.sensor_values[sensor_id] = reading.value 
 
     def predict(self) -> np.array:
         """
         For every point in the ASSC model, predict the current touch event state.
         """
-        return self.model.predict_markovian(self.readings)
+        return self.model.predict_markovian(self.sensor_values)

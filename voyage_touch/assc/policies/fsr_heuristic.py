@@ -24,10 +24,10 @@ class FSRHeuristicPolicy(ASSCModel):
     def get_config(self) -> ASSCModelConfig:
         return self.config
     
-    def predict_markovian(self, readings: List[SensorReading]) -> np.array:
+    def predict_markovian(self, readings: List[float]) -> np.array:
         res = np.zeros(self.config.num_points)
-        for i, reading in enumerate(readings):
-            if reading is not None and reading.value > self.floor:
+        for i, x in enumerate(readings):
+            if x > self.floor:
                 res[i] = 1
         return res
     

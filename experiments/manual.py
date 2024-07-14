@@ -74,7 +74,7 @@ def record_sensor_values(
         # print(current_values)
 
 if __name__ == '__main__':
-    # old_settings = disable_echo() 
+    old_settings = disable_echo() 
 
     sensor = TouchSensor('/dev/ttyACM0')
     reader = TouchSensorReader(sensor)
@@ -104,7 +104,7 @@ if __name__ == '__main__':
                 listener.join(0.01)
             except EscapeException as e:
                 print('Terminating...')
-                # enable_echo(old_settings)
+                enable_echo(old_settings)
 
                 reader.stop()
                 thread.join()
