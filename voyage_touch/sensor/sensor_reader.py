@@ -1,4 +1,3 @@
-import asyncio
 from queue import Queue
 from threading import Thread, Lock
 from typing import Optional
@@ -41,7 +40,7 @@ class TouchSensorReader:
         
         print("serial connection initialised!")
         
-        sensor_thread = Thread(target=lambda: asyncio.run(self.sensor.run()))
+        sensor_thread = Thread(target=lambda: self.sensor.run())
         sensor_thread.start()
         return sensor_thread
     
