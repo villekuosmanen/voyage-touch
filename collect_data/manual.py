@@ -111,7 +111,6 @@ if __name__ == '__main__':
                 stop_event.set()
                 sensor_thread.join()
 
-                # TODO: record data
-                store_markovian_data("data/experiment0.csv", recorded_data)
+                store_markovian_data("data", recorded_data)
 
                 exit()
