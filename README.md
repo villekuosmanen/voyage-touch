@@ -30,7 +30,7 @@ pip install voyage-touch
 
 To run the examples, also install the following:
 ```
-pip install tqdm
+pip install tqdm pynput
 ```
 
 The Voyage Touch API is still experimental and may change in the future.
