@@ -4,9 +4,6 @@ from typing import Optional
 
 from voyage_touch.sensor import SensorReading, SensorType, TouchSensor
 
-FSR_MAX_READING = 1000
-PIEZO_MAX_READING = 160
-
 class TouchSensorReader:
     """
     A convenient class for reading raw data from touch sensors via serial connections.
