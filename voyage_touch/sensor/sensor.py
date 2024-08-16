@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import time
+from typing import Tuple
 
 import serial
 
@@ -19,39 +20,63 @@ class TouchSensor:
     """
     Class for communicating via touch sensors. 
     """
-    def __init__(self, port, baudrate=115200, timeout=5, num_fsrs=3, num_pzs=3):
+    def __init__(
+            self, 
+            port, 
+            num_fsrs,
+            num_pzs,
+            publish_rate=100,
+            timeout=5,
+            baudrate=115200, # not currently adaptable
+            ):
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
         self.num_fsrs = num_fsrs
         self.num_pzs = num_pzs
+        self.publish_rate = publish_rate
 
         self.should_stop = False
 
         self.arduino = None
+        self.callback = None
 
-    def connect(self, callback) -> bool:
+    def connect(self, callback) -> Tuple[bool, str]:
         self.callback = callback
 
         # Initialse serial connection
-        self.arduino = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1) 
-        print("initialising serial connection...")
-        time.sleep(0.5)  # Wait for the serial connection to initialize
+        try:
+            self.arduino = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=self.timeout)
+            print("Initialising serial connection...")
+            time.sleep(0.5)  # Wait for the serial connection to initialize
+        except serial.SerialException as e:
+            return (False, f"Failed to connect to {self.port}: {e}")
 
         for _ in range(100):
+            line = self.arduino.readline()
+
+        # send init message
+        init_message = f"INIT,{self.num_fsrs},{self.publish_rate}\n"
+        self.arduino.write(init_message.encode())
+
+        for _ in range(500):
             line = self.arduino.readline()
             try:
                 line = line.decode('utf-8').strip()
                 tokens = line.split(',')
+                if len(tokens) == 2 and tokens[0] == 'INIT':
+                    if tokens[1] == 'OK':
+                        # initialised successfully
+                        return (True, "")
+                if len(tokens) == 2 and tokens[0] == 'ERROR':
+                    return (False, f"Failed to initialise sensor: {tokens[1]}")
                 if len(tokens) != 3:
+                    # other data, skip
                     continue
-                
-                # initialised successfully
-                return True
             except:
                 continue
 
-        return False
+        return (False, "init response not received")
     
     def close(self):
         self.should_stop = True

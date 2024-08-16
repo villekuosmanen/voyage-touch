@@ -11,7 +11,7 @@ NO_OF_SENSORS = 4
 # Example for reading raw data from a queue using the TouchSensorReader class.
 
 if __name__ == '__main__':
-    sensor = TouchSensor('/dev/ttyACM0', num_fsrs=NO_OF_SENSORS)
+    sensor = TouchSensor('/dev/ttyACM0', num_fsrs=NO_OF_SENSORS, num_pzs=0)
     reader = TouchSensorReader(sensor)
 
     # initialise reader

@@ -38,9 +38,9 @@ class TimeSeriesASSC:
         self.readings = [deque()]*(sensor.num_fsrs + sensor.num_pzs)
     
     async def start(self) -> Thread:
-        success = self.sensor.connect(self.sensor_callback)
+        (success, msg) = self.sensor.connect(self.sensor_callback)
         if not success:
-            raise ValueError("failed to connect via serial")
+            raise ValueError(f"failed to connect via serial: {msg}")
         
         print("serial connection initialised!")
         
